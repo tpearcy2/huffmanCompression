@@ -1,4 +1,8 @@
-
+/**
+ * The class used for compressing and decompressing a string of text.
+ * @author trent
+ *
+ */
 public class huffmanCompression {
 
 	public huffmanCompression() {
