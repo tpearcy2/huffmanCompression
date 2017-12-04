@@ -104,11 +104,41 @@ public class binaryTree {
         this.charVal = (char) 0;
     }
     
+    /**
+     * 
+     * @param findChar
+     * @param parentNode
+     * @return
+     * 
+     * Tested 12/4/17 00:48
+     */
+    public static binaryTree find(final char findChar, final binaryTree parentNode) {
+    	binaryTree result = null;
+    	
+    	if (parentNode == null) {
+    		return null;
+    	}
+    	if (parentNode.charVal == findChar) {
+    		return parentNode;
+    	}
+    	if (parentNode.left != null) {
+    		result = find(findChar, parentNode.left);
+    	}
+    	if (result == null) {
+    		result = find(findChar, parentNode.right);
+    	}
+    	return result;
+    }
+    
+    
+    
+    
     
     /**
      * Constructs a complete tree from a tree array.
      * @param input
      * @return returns a parent node.
+     * Tested  12/4/17 00:09.
      */
     public static binaryTree binaryTreeBuilder(final binaryTree[] input) {
     	
@@ -116,9 +146,17 @@ public class binaryTree {
     		System.out.println("binaryTreeBuilder has reached the base case.");
     		return input[0];
     	}
+    	
+    	/**
+    	 * Sorts the array and then creates a second one with one less indexes
+    	 * than the input.
+    	 */
     	binaryTree[] array = sort(input);
     	binaryTree[] output = new binaryTree[array.length - 1];
     	
+    	/**
+    	 * Combines the two nodes.
+    	 */
     	output[0] = new binaryTree(array[0], array[1]);
     	array[0].parent = output[0];
     	array[1].parent = output[0];
@@ -127,9 +165,9 @@ public class binaryTree {
     		output[i] = array[i + 1];
     	}
     	
-    	binaryTreeBuilder(output);
+    	binaryTree returnTree = binaryTreeBuilder(output);
+    	return returnTree;
     	
-    	return null;
     }
     
     
@@ -143,7 +181,7 @@ public class binaryTree {
     	
 		binaryTree[] input = new binaryTree[inputToSort.length];
 		
-		System.out.println("The input length is " + input.length);
+		// System.out.println("The input length is " + input.length);
 		
 		
 		
@@ -153,9 +191,6 @@ public class binaryTree {
 			input[i] = inputToSort[i];
 		}
 		
-		for (int i = 0; i < input.length; i++) {
-			System.out.println(input[i].value);
-		}
 		
 		while (!isSorted(input)) {
 			for (int i = 0; i < input.length - 1; i++) {
@@ -257,6 +292,7 @@ public class binaryTree {
 		}
 		return binaryArray;
 	}
+	
     
     
 

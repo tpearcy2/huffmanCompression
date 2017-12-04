@@ -33,16 +33,6 @@ public class huffmanCompression {
 
 	public static void main(String[] args) {
 		
-		binaryTree[] array = binaryTree.binaryTreeArray("Hello world");
-		
-		System.out.println(array.length);
-		for (int i = 0; i < array.length; i++) {
-			System.out.print(array[i].charVal);
-			System.out.println(array[i].value);
-		}
-		
-		// TODO Auto-generated method stub
-
 	}
 
 
