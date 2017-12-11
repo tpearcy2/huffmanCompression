@@ -105,9 +105,9 @@ public class binaryTree {
     }
     
     /**
-     * 
-     * @param findChar
-     * @param parentNode
+     * Finds the node in a tree containing the search Character.
+     * @param findChar the character to find.
+     * @param parentNode the parentNode of the tree to search through.
      * @return
      * 
      * Tested 12/4/17 00:48
@@ -128,6 +128,18 @@ public class binaryTree {
     		result = find(findChar, parentNode.right);
     	}
     	return result;
+    }
+    
+    /**
+     * Determines the depth of the node from the root.
+     * @return the depth relative to root.
+     */
+    public int depth() {
+        if (this.parent == null) {
+            return 0;
+        } else {
+            return (1 + this.parent.depth());
+        }
     }
     
     
@@ -164,10 +176,8 @@ public class binaryTree {
     	for (int i = 1; i < output.length; i++) {
     		output[i] = array[i + 1];
     	}
-    	
     	binaryTree returnTree = binaryTreeBuilder(output);
     	return returnTree;
-    	
     }
     
     
@@ -177,21 +187,13 @@ public class binaryTree {
      * @return
      */
     public static binaryTree[] sort(final binaryTree[] inputToSort) {
-		
-    	
 		binaryTree[] input = new binaryTree[inputToSort.length];
 		
 		// System.out.println("The input length is " + input.length);
 		
-		
-		
-		
-		
 		for (int i = 0; i < input.length; i++) {
 			input[i] = inputToSort[i];
 		}
-		
-		
 		while (!isSorted(input)) {
 			for (int i = 0; i < input.length - 1; i++) {
 	            int min = i;
@@ -203,11 +205,8 @@ public class binaryTree {
 	            binaryTree temp = input[min];
 	            input[min] = input[i];
 	            input[i] = temp;
-
 	        }
 		}
-		
-		
 		return input;
 	}
     
@@ -291,6 +290,168 @@ public class binaryTree {
 			binaryArray[i].value = nZVFrequency[i];
 		}
 		return binaryArray;
+	}
+	
+	/**
+	 * Determines if the this is on the right or left.
+	 * @return true if it is a right node.
+	 */
+	public boolean isRightChild() {
+		if (this.parent.right == this) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Determines the path to the desred node.
+	 * tested 12/4/17 02:35.
+	 * @return
+	 */
+	public boolean[] path() {
+		
+		boolean[] path = new boolean[this.depth()];
+		
+		if (this.depth() == 1) {
+			path[0] = this.isRightChild();
+			return path;
+		}
+		
+		boolean[] restOfPath = this.parent.path();
+		
+		path[path.length - 1] = this.isRightChild();
+		
+		for (int i = 0; i < restOfPath.length; i++) {
+			path[i] = restOfPath[i];
+		}
+		return path;
+	}
+	
+	
+	public static binaryTree textToTree(String text) {
+		/**
+		 * makes an array of leaf nodes each containing a character and a frequency value.
+		 */
+		binaryTree[] array = binaryTreeArray(text);
+		
+		/**
+		 * combines those leaf nodes into one tree.
+		 */
+		binaryTree parentNode = binaryTreeBuilder(array);
+		
+		return parentNode;
+	}
+	
+	public static byte[] textToBytes(String text, binaryTree parentNode) {
+        int count = 0;
+		
+		/**
+		 * creates a 2D boolean array. It has one dimension that is lined up with
+		 * each character in the text. It then contains the path to that character. For
+		 * example; the text "Hello world!" would make a boolean[][] with .length = 12, and
+		 * [i].length equal to the number of bits required to get to the character at i in
+		 * the tree.
+		 */
+	    boolean[][] binaryArray = new boolean[text.length()][];
+		for (int i = 0; i < text.length(); i++) {
+			binaryTree leafNode = binaryTree.find(text.charAt(i), parentNode);
+			boolean[] path = leafNode.path();
+			binaryArray[i] = path;
+		}
+		
+		int counting = 0;
+		for (int i = 0; i < binaryArray.length; i++) {
+			for (int j = 0; j < binaryArray[i].length; j++) {
+				counting++;
+			}
+		}
+		System.out.println(counting);
+		
+		/**
+		 * determines the number of bytes required to transmit the entire word's path.
+		 * NOT COMPLETE, AND WILL NOT WORK FOR ANYTHING OTHER THAN "Hello world!"
+		 */
+        int numberOfBytes = counting / 8;
+        if (counting / 8 != 0) {
+        	numberOfBytes += 1;
+        }
+        System.out.println(numberOfBytes);
+        
+        /**
+         * a normal boolean array used for turning the 2D array into a single string of bits.
+         */
+        boolean[] binary = new boolean[numberOfBytes * 8];
+        
+        /**
+         * used to represent the binary array as a string of bytes to be transmitted.
+         */
+        byte[] output = new byte[numberOfBytes];
+        
+        /**
+         * converts the 2d binaryArray into the 1D boolean binary array.
+         */
+        count = 0;
+        for (int i = 0; i < binaryArray.length; i++) {
+			for (int j = 0; j < binaryArray[i].length; j++) {
+				binary[count] = binaryArray[i][j];
+				count++;
+			}
+        }
+        
+        /**
+         * Same value as binary but its length % 8 is 0. It will
+         * have falses added to the end.
+         */
+        boolean[] byteBinary = new boolean[numberOfBytes * 8];    
+        for (int i = 0; i < binary.length; i++) {
+        	byteBinary[i] = binary[i];
+        }
+        
+        /**
+         * creates an int that represents a byte. it turns byteBinary
+         * into usable bytes.
+         */
+        for (int i = 0; i < output.length; i++) {
+        	int byteRep = 0;
+        	for (int j = 8 * (i); j < (8 * i + 8); j++) {
+        		byteRep = byteRep << 1;
+        		
+        		if (byteBinary[j]) {
+        			byteRep++;
+        		}
+        	}
+        	output[i] = (byte) byteRep;
+        }
+        
+        
+        /**
+         * checks the value of each byte in output.
+         */
+        for (int i = 0; i < output.length; i++) {
+        	System.out.printf("0x%02X", output[i]);
+        	System.out.println();
+        }
+        return output;
+	}
+	
+	public static boolean[] printChar(boolean[] path, binaryTree parentNode) {
+		if (parentNode.charVal != (char) 0) {
+			System.out.print(parentNode.charVal);
+			return path;
+		} else if (path[0]) {
+			boolean[] shortPath = new boolean[path.length - 1];
+			for (int i = 0; i < shortPath.length; i++) {
+				shortPath[i] = path[i + 1];
+			}
+			return (printChar(shortPath, parentNode.right));
+		} else {
+			boolean[] shortPath = new boolean[path.length - 1];
+			for (int i = 0; i < shortPath.length; i++) {
+				shortPath[i] = path[i + 1];
+			}
+			return (printChar(shortPath, parentNode.left));
+		}
 	}
 	
     
