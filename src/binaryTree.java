@@ -1,3 +1,5 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.Serializable;
 /**
  * A class for constructing binary trees to use Huffman Compression.
@@ -429,22 +431,28 @@ public class binaryTree implements Serializable {
         return output;
 	}
 	
-	public static boolean[] printChar(boolean[] path, binaryTree parentNode) {
+	public static boolean[] printChar(boolean[] path, binaryTree parentNode, BufferedWriter bufferedWriter) {
 		if (parentNode.charVal != (char) 0) {
 			System.out.print(parentNode.charVal);
+			try {
+				bufferedWriter.write((int) parentNode.charVal);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return path;
 		} else if (path[0]) {
 			boolean[] shortPath = new boolean[path.length - 1];
 			for (int i = 0; i < shortPath.length; i++) {
 				shortPath[i] = path[i + 1];
 			}
-			return (printChar(shortPath, parentNode.right));
+			return (printChar(shortPath, parentNode.right, bufferedWriter));
 		} else {
 			boolean[] shortPath = new boolean[path.length - 1];
 			for (int i = 0; i < shortPath.length; i++) {
 				shortPath[i] = path[i + 1];
 			}
-			return (printChar(shortPath, parentNode.left));
+			return (printChar(shortPath, parentNode.left, bufferedWriter));
 		}
 	}
 	

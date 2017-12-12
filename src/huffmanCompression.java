@@ -1,12 +1,16 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.io.ObjectInputStream;
 /**
  * The class used for compressing and decompressing a string of text.
@@ -113,75 +117,7 @@ public class huffmanCompression {
         
         
         
-        
-        
-        
-        
-        byte[] input;
-        
-        try {
-        	System.out.println("Enter the path to the file in which the copressed text and the");
-    		System.out.println("binary tree are stored.");
-    		path = sc.nextLine();
-            file = new File(path + "/huffman.txt");
-            fileObject = new File(path + "/huffmanTree.txt");
-			FileInputStream fis = new FileInputStream(file);
-			FileInputStream fois = new FileInputStream(fileObject);
-			
-			ObjectInputStream ois = new ObjectInputStream(fois);
-			
-			binaryTree inputParentNode = (binaryTree) ois.readObject();
-			
-			
-			
-			input = new byte[fis.available()];
-			
-			fis.read(input);
-			
-			 boolean[] byteBinary = new boolean[input.length * 8];
-			
-			 for (int i = 0; i < input.length; i++) {
-		         int byteRep = (int) input[i];
-		         byte bytes = (byte) byteRep;
-		         int byteRepTemp = byteRep;
-		         
-		         
-		         for (int j = 8 * (i); j < (8 * i + 8); j++) {
-		        	 int pos = (8 * i) + 7 - j;
-		        	 byte tem = getBit(pos, byteRep);
-		        	 if (tem == 1) {
-		        		 byteBinary[j] = true;
-		        	 }
-		        	 
-		         }
-		     }
-		
-			 
-			 for (int i = 0; i < parentNode.value; i++) {
-				 byteBinary = binaryTree.printChar(byteBinary, inputParentNode); 
-			 }
-			 fis.close();
-			 ois.close();
-			 
-			
-			 
-			 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        
-        
-        
-        
-      
-        
-       
-        
+        System.out.println("Files have been compressed.");
 	}
 	
 	
