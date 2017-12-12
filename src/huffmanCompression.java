@@ -1,8 +1,13 @@
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 /**
  * The class used for compressing and decompressing a string of text.
  * @author trent
@@ -43,6 +48,22 @@ public class huffmanCompression {
 	
 	
 	
+	public static String textToString(String input) {
+		
+		try {
+			String output = new String(Files.readAllBytes(Paths.get(input)));
+			return output;
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	
+	
 	
 	
 	
@@ -50,9 +71,13 @@ public class huffmanCompression {
 		/**
 		 * the text to compress.
 		 */
-		String text = "The quick brown fox jumped over the lazy dog.";
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the path to the text file to be compressed.");
+		String path = sc.nextLine();
 		
-		System.out.println(text);
+		String text = textToString(path);
+		
+		System.out.println("##################");
 		
 		
 		/**
@@ -62,15 +87,22 @@ public class huffmanCompression {
 		
 		
 		byte[] output = binaryTree.textToBytes(text, parentNode);
-        
-        File file = new File("/home/trent/huffman.txt");
+		System.out.println("Enter the path to the file in which the copressed text and the");
+		System.out.println("binary tree should be stored.");
+		path = sc.nextLine();
+        File file = new File(path + "/huffman.txt");
+        File fileObject = new File(path + "/huffmanTree.txt");
         
         try {
 			FileOutputStream fos = new FileOutputStream(file);
+			FileOutputStream fos2 = new FileOutputStream(fileObject);
+			ObjectOutputStream oos = new ObjectOutputStream(fos2);
 			
 			fos.write(output);
+			oos.writeObject(parentNode);
 			
 			fos.close();
+			oos.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,29 +120,32 @@ public class huffmanCompression {
         byte[] input;
         
         try {
+        	System.out.println("Enter the path to the file in which the copressed text and the");
+    		System.out.println("binary tree are stored.");
+    		path = sc.nextLine();
+            file = new File(path + "/huffman.txt");
+            fileObject = new File(path + "/huffmanTree.txt");
 			FileInputStream fis = new FileInputStream(file);
+			FileInputStream fois = new FileInputStream(fileObject);
+			
+			ObjectInputStream ois = new ObjectInputStream(fois);
+			
+			binaryTree inputParentNode = (binaryTree) ois.readObject();
+			
+			
 			
 			input = new byte[fis.available()];
 			
 			fis.read(input);
-			System.out.println();
 			
-			 for (int i = 0; i < input.length; i++) {
-		        	System.out.printf("0x%02X", input[i]);
-		        	System.out.println();
-		        }
-			 
 			 boolean[] byteBinary = new boolean[input.length * 8];
-			 System.out.println("input");	
-			 System.out.println();
+			
 			 for (int i = 0; i < input.length; i++) {
 		         int byteRep = (int) input[i];
 		         byte bytes = (byte) byteRep;
 		         int byteRepTemp = byteRep;
 		         
 		         
-		         System.out.printf("0x%02X", byteRep);
-		         System.out.println();
 		         for (int j = 8 * (i); j < (8 * i + 8); j++) {
 		        	 int pos = (8 * i) + 7 - j;
 		        	 byte tem = getBit(pos, byteRep);
@@ -120,14 +155,13 @@ public class huffmanCompression {
 		        	 
 		         }
 		     }
-			 System.out.println();
-			 for (int i = 0; i < byteBinary.length; i++) {
-				 System.out.println(byteBinary[i]);
-			 }
+		
 			 
 			 for (int i = 0; i < parentNode.value; i++) {
-				 byteBinary = binaryTree.printChar(byteBinary, parentNode); 
+				 byteBinary = binaryTree.printChar(byteBinary, inputParentNode); 
 			 }
+			 fis.close();
+			 ois.close();
 			 
 			
 			 
@@ -135,7 +169,14 @@ public class huffmanCompression {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+        
+        
+        
+        
         
       
         

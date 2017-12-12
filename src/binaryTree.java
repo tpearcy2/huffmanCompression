@@ -1,10 +1,13 @@
+import java.io.Serializable;
 /**
  * A class for constructing binary trees to use Huffman Compression.
  * @author trent
  *
  */
-public class binaryTree {
+public class binaryTree implements Serializable {
 	
+	/** Used to save a binaryTree. */
+	private static final long serialVersionUID = 1234L;
 	
 	/** Current node's parent. May be null if I'm the root of the tree. */
     public binaryTree parent;
@@ -155,7 +158,6 @@ public class binaryTree {
     public static binaryTree binaryTreeBuilder(final binaryTree[] input) {
     	
     	if (input.length == 1) {
-    		System.out.println("binaryTreeBuilder has reached the base case.");
     		return input[0];
     	}
     	
@@ -366,7 +368,6 @@ public class binaryTree {
 				counting++;
 			}
 		}
-		System.out.println(counting);
 		
 		/**
 		 * determines the number of bytes required to transmit the entire word's path.
@@ -376,7 +377,6 @@ public class binaryTree {
         if (counting / 8 != 0) {
         	numberOfBytes += 1;
         }
-        System.out.println(numberOfBytes);
         
         /**
          * a normal boolean array used for turning the 2D array into a single string of bits.
@@ -425,13 +425,7 @@ public class binaryTree {
         }
         
         
-        /**
-         * checks the value of each byte in output.
-         */
-        for (int i = 0; i < output.length; i++) {
-        	System.out.printf("0x%02X", output[i]);
-        	System.out.println();
-        }
+    
         return output;
 	}
 	
