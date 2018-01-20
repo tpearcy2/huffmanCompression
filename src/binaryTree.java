@@ -433,7 +433,7 @@ public class binaryTree implements Serializable {
 	
 	public static boolean[] printChar(boolean[] path, binaryTree parentNode, BufferedWriter bufferedWriter) {
 		if (parentNode.charVal != (char) 0) {
-			System.out.print(parentNode.charVal);
+			// System.out.print(parentNode.charVal);
 			try {
 				bufferedWriter.write((int) parentNode.charVal);
 			} catch (IOException e) {

@@ -75,13 +75,14 @@ public class huffmanCompression {
 		/**
 		 * the text to compress.
 		 */
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Enter the path to the text file to be compressed.");
-		String path = sc.nextLine();
+		// Scanner sc = new Scanner(System.in);
+		// System.out.println("Enter the path to the text file to be compressed.");
+		// String path = sc.nextLine();
 		
-		String text = textToString(path);
+		String text = textToString(args[0]);
 		
-		System.out.println("##################");
+		
+		// System.out.println("##################");
 		
 		
 		/**
@@ -91,11 +92,13 @@ public class huffmanCompression {
 		
 		
 		byte[] output = binaryTree.textToBytes(text, parentNode);
-		System.out.println("Enter the path to the file in which the copressed text and the");
-		System.out.println("binary tree should be stored.");
-		path = sc.nextLine();
+		// System.out.println("Enter the path to the file in which the copressed text and the");
+		// System.out.println("binary tree should be stored.");
+		// path = sc.nextLine();
+		String path = args[1];
         File file = new File(path + "/huffman.txt");
         File fileObject = new File(path + "/huffmanTree.txt");
+        // sc.close();
         
         try {
 			FileOutputStream fos = new FileOutputStream(file);
@@ -119,7 +122,6 @@ public class huffmanCompression {
         
         System.out.println("Files have been compressed.");
 	}
-	
 	
 	
 	
